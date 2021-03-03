@@ -116,7 +116,7 @@ pipeline {
                 echo "Pushing Docker image to Hub..."
                 script {
                     docker.withRegistry('', cred_id) {
-                        dockerImage.push()
+                        dkr_img_reg.push()
                     }
                 }
 /*
