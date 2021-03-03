@@ -35,7 +35,8 @@ pipeline {
                     ])
                 }
 
-                git 'https://github.com/yan-nagler-sw/proj-4.git'
+//                git 'https://github.com/yan-nagler-sw/proj-4.git'
+                git "https://github.com/yan-nagler-sw/${proj}.git"
 
                 bat """
                     dir /A
