@@ -12,16 +12,10 @@ pipeline {
         py_dir = "${crs_dir}\\py"
         pkgs_dir = "${py_dir}\\venv\\Lib\\site-packages"
 
-        dkr_img_name = "$proj"
-
+        dkr_img = "$proj"
         dkr_reg_usr = "yannagler"
-        dkr_reg_repo = "${dkr_reg_usr}/${dkr_img_name}"
+        dkr_reg_repo = "${dkr_reg_usr}/${dkr_img}"
         dkr_img_reg = ""
-
-        dkr_svc = "rest"
-        dkr_img_name_cmp = "${dkr_img_name}_${dkr_svc}"
-
-        img_ver = "1.2.3"
     }
 
     stages {
@@ -94,7 +88,7 @@ pipeline {
 
         stage("Stage-6: Build Docker image") {
             steps {
-                echo "Building Docker image: ${dkr_img_name}..."
+                echo "Building Docker image: ${dkr_reg_repo}:$BUILD_NUMBER..."
                 script {
                     dkr_img_reg = docker.build dkr_reg_repo + ":$BUILD_NUMBER"
                 }
@@ -117,9 +111,9 @@ pipeline {
 
         stage("Stage-8: Set compose image version") {
             steps {
-                echo "Setting compose image version: ${img_ver}..."
+                echo "Setting compose image version: ${BUILD_NUMBER}..."
                 bat """
-                    echo IMAGE_TAG=${img_ver} > .env
+                    echo IMAGE_TAG=${BUILD_NUMBER} > .env
                     type .env
                 """
             }
@@ -155,9 +149,6 @@ pipeline {
                 docker-compose down
 
                 docker rmi $dkr_reg_repo:$BUILD_NUMBER
-
-                docker rmi -f ${dkr_img_name}
-                docker rmi -f ${dkr_img_name_cmp}
 
                 docker ps -a
                 docker images
