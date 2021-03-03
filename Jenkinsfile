@@ -5,6 +5,8 @@ pipeline {
         proj="proj-4"
         py = "python"
 
+        cred_id="yan-nagler"
+
         crs_dir = '%USERPROFILE%\\Desktop\\dev-ops-course'
         env_dir = "${crs_dir}\\env"
         py_dir = "${crs_dir}\\py"
@@ -12,7 +14,11 @@ pipeline {
 
         dkr_img_name = "$proj"
         dkr_repo_usr = "yannagler"
-        dkr_img_name_repo = "${dkr_repo_usr}/${dkr_img_name}"
+
+        dkr_repo = "${dkr_repo_usr}/${dkr_img_name}"
+        dkr_img_repo = ""
+
+//        dkr_img_name_repo = "${dkr_repo_usr}/${dkr_img_name}"
 
         dkr_svc = "rest"
         dkr_img_name_cmp = "${dkr_img_name}_${dkr_svc}"
@@ -35,7 +41,6 @@ pipeline {
                     ])
                 }
 
-//                git 'https://github.com/yan-nagler-sw/proj-4.git'
                 git "https://github.com/yan-nagler-sw/${proj}.git"
 
                 bat """
@@ -101,12 +106,20 @@ pipeline {
 
         stage("Stage-7: Push Docker image to Hub") {
             steps {
-                echo "Pushing Docker image to Hub: ${dkr_img_name} -> ${dkr_img_name_repo}..."
+                echo "Pushing Docker image to Hub: ${dkr_img_name}..."
+                script {
+                    dkr_img_repo = docker.build registry + ":$BUILD_NUMBER"
+                    docker.withRegistry('', cred_id) {
+                        dockerImage.push()
+                    }
+                }
+/*
                 bat """
                     docker login
                     docker tag ${dkr_img_name} ${dkr_img_name_repo}
                     docker push ${dkr_img_name_repo}
                 """
+*/
             }
         }
 
@@ -149,7 +162,8 @@ pipeline {
             bat """
                 docker-compose down
 
-                docker rmi -f ${dkr_img_name_repo}
+#                docker rmi -f ${dkr_img_name_repo}
+
                 docker rmi -f ${dkr_img_name}
                 docker rmi -f ${dkr_img_name_cmp}
 
