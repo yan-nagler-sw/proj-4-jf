@@ -98,7 +98,7 @@ pipeline {
             steps {
                 echo "Building Docker image: ${dkr_img_name}..."
                 script {
-                    dkr_img_reg = docker.build ${dkr_reg_repo} + ":$BUILD_NUMBER"
+                    dkr_img_reg = docker.build dkr_reg_repo + ":$BUILD_NUMBER"
                 }
 /*
                 bat """
