@@ -14,8 +14,10 @@ pipeline {
 
         dkr_img = "$proj"
         dkr_reg_usr = "yannagler"
-        dkr_reg_repo = "${dkr_reg_usr}/${dkr_img}"
-        dkr_img_reg = ""
+
+        dkr_img_reg_base = "${dkr_reg_usr}/${dkr_img}"
+        dkr_img_reg = "${dkr_img_reg_base}:${BUILD_NUMBER}"
+        dkr_img_reg_hndl = ""
     }
 
     stages {
@@ -88,9 +90,9 @@ pipeline {
 
         stage("Stage-6: Build Docker image") {
             steps {
-                echo "Building Docker image: ${dkr_reg_repo}:$BUILD_NUMBER..."
+                echo "Building Docker image: ${dkr_img_reg}..."
                 script {
-                    dkr_img_reg = docker.build dkr_reg_repo + ":$BUILD_NUMBER"
+                    dkr_img_reg_hndl = docker.build dkr_img_reg
                 }
                 bat """
                     docker images
@@ -103,7 +105,7 @@ pipeline {
                 echo "Pushing Docker image to Hub..."
                 script {
                     docker.withRegistry('', cred_id) {
-                        dkr_img_reg.push()
+                        dkr_img_reg_hndl.push()
                     }
                 }
             }
@@ -148,7 +150,7 @@ pipeline {
             bat """
                 docker-compose down
 
-                docker rmi $dkr_reg_repo:$BUILD_NUMBER
+                docker rmi $dkr_img_reg
 
                 docker ps -a
                 docker images
