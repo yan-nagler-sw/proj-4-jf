@@ -105,9 +105,9 @@ pipeline {
 
         stage("Stage-7: Push Docker image to Hub") {
             steps {
-                echo "Pushing Docker image to Hub: ${dkr_img_name}..."
+                echo "Pushing Docker image to Hub: ${dkr_img_repo}..."
                 script {
-                    dkr_img_repo_bld = docker.build registry + ":$BUILD_NUMBER"
+                    dkr_img_repo_bld = docker.build ${dkr_img_repo} + ":$BUILD_NUMBER"
                     docker.withRegistry('', cred_id) {
                         dockerImage.push()
                     }
