@@ -18,8 +18,6 @@ pipeline {
         dkr_reg_repo = "${dkr_reg_usr}/${dkr_img_name}"
         dkr_img_reg = ""
 
-//        dkr_img_name_repo = "${dkr_repo_usr}/${dkr_img_name}"
-
         dkr_svc = "rest"
         dkr_img_name_cmp = "${dkr_img_name}_${dkr_svc}"
 
@@ -100,11 +98,6 @@ pipeline {
                 script {
                     dkr_img_reg = docker.build dkr_reg_repo + ":$BUILD_NUMBER"
                 }
-/*
-                bat """
-                    docker build -t ${dkr_img_name} .
-                """
-*/
                 bat """
                     docker images
                 """
@@ -119,13 +112,6 @@ pipeline {
                         dkr_img_reg.push()
                     }
                 }
-/*
-                bat """
-                    docker login
-                    docker tag ${dkr_img_name} ${dkr_img_name_repo}
-                    docker push ${dkr_img_name_repo}
-                """
-*/
             }
         }
 
