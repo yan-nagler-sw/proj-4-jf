@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        proj="proj-3"
+        proj="proj-4"
         py = "python"
 
         crs_dir = '%USERPROFILE%\\Desktop\\dev-ops-course'
@@ -35,7 +35,7 @@ pipeline {
                     ])
                 }
 
-                git 'https://github.com/yan-nagler-sw/proj-3.git'
+                git 'https://github.com/yan-nagler-sw/proj-4.git'
 
                 bat """
                     dir /A
