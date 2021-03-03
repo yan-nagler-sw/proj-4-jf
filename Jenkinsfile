@@ -103,7 +103,6 @@ pipeline {
 /*
                 bat """
                     docker build -t ${dkr_img_name} .
-                    docker images
                 """
 */
                 bat """
@@ -114,7 +113,7 @@ pipeline {
 
         stage("Stage-7: Push Docker image to Hub") {
             steps {
-                echo "Pushing Docker image to Hub: ${dkr_img_repo}..."
+                echo "Pushing Docker image to Hub..."
                 script {
                     docker.withRegistry('', cred_id) {
                         dockerImage.push()
