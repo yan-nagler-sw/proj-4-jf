@@ -14,9 +14,8 @@ pipeline {
 
         dkr_img_name = "$proj"
         dkr_repo_usr = "yannagler"
-
-        dkr_repo = "${dkr_repo_usr}/${dkr_img_name}"
-        dkr_img_repo = ""
+        dkr_img_repo = "${dkr_repo_usr}/${dkr_img_name}"
+        dkr_img_repo_bld = ""
 
 //        dkr_img_name_repo = "${dkr_repo_usr}/${dkr_img_name}"
 
@@ -108,7 +107,7 @@ pipeline {
             steps {
                 echo "Pushing Docker image to Hub: ${dkr_img_name}..."
                 script {
-                    dkr_img_repo = docker.build registry + ":$BUILD_NUMBER"
+                    dkr_img_repo_bld = docker.build registry + ":$BUILD_NUMBER"
                     docker.withRegistry('', cred_id) {
                         dockerImage.push()
                     }
@@ -162,7 +161,7 @@ pipeline {
             bat """
                 docker-compose down
 
-                docker rmi $rdkr_repo:$BUILD_NUMBER
+                docker rmi $dkr_img_repo:$BUILD_NUMBER
 
                 docker rmi -f ${dkr_img_name}
                 docker rmi -f ${dkr_img_name_cmp}
