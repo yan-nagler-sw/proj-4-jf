@@ -18,6 +18,8 @@ pipeline {
         dkr_img_reg_base = "${dkr_reg_usr}/${dkr_img_base}"
         dkr_img_reg = "${dkr_img_reg_base}:${BUILD_NUMBER}"
         dkr_img_reg_hndl = ""
+
+        hlm_chart = "$proj"
     }
 
     stages {
@@ -140,20 +142,37 @@ pipeline {
                 """
             }
         }
+
+        stage("Stage-11: Clean Docker environment") {
+            steps {
+                echo "Cleaning Docker environment..."
+                bat """
+                    docker-compose down
+                    docker ps -a
+
+                    docker rmi $dkr_img_reg
+                    docker images
+                """
+            }
+        }
+
+        stage("Stage-12: Deploy Helm chart") {
+            steps {
+                echo "Deploying Helm chart..."
+                bat """
+                    helm install ${proj} --debug --set image.repository=${dkr_img_reg_base},image.tag=${BUILD_NUMBER} ${hlm_chart}
+                    helm list --all
+                """
+            }
+        }
     }
 
     post {
         always {
             echo "post - always"
-
-            echo "Cleaning Docker environment..."
             bat """
-                docker-compose down
-
-                docker rmi $dkr_img_reg
-
-                docker ps -a
-                docker images
+                helm delete ${hlm_chart}
+                helm list --all
             """
        }
         success {
