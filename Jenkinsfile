@@ -54,6 +54,10 @@ pipeline {
                     ${py} backend_testing_db.py
                 """
 
+                bat """
+                    ${py} backend_testing_db.py
+                """
+
                 echo "Copying Selenium WebDriver - Chrome..."
                 bat """
                     cp ${env_dir}/chromedriver .
@@ -165,6 +169,8 @@ pipeline {
                 echo "Deploying Helm chart..."
                 bat """
                     helm install ${proj} --debug --set image.repository=${dkr_img_reg_base},image.tag=${BUILD_NUMBER} ${hlm_chart}
+                    sleep 5
+
                     helm list --all
                 """
             }
