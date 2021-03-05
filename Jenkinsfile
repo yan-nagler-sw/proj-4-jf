@@ -54,10 +54,6 @@ pipeline {
                     ${py} backend_testing_db.py
                 """
 
-                bat """
-                    ${py} backend_testing_db.py
-                """
-
                 echo "Copying Selenium WebDriver - Chrome..."
                 bat """
                     cp ${env_dir}/chromedriver .
