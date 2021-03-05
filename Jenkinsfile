@@ -67,6 +67,7 @@ pipeline {
                 bat """
                     set PYTHONPATH=%PYTHONPATH%;${pkgs_dir}
                     start /min ${py} rest_app.py
+                    sleep 5
                 """
             }
         }
@@ -129,6 +130,8 @@ pipeline {
                 echo "Build Docker container..."
                 bat """
                     docker-compose up --build -d
+                    sleep 5
+
                     docker ps -a
                 """
             }
