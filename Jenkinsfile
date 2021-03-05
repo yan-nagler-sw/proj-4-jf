@@ -12,14 +12,15 @@ pipeline {
         py_dir = "${crs_dir}\\py"
         pkgs_dir = "${py_dir}\\venv\\Lib\\site-packages"
 
-        dkr_img_base = "$proj"
+        dkr_img_base = "${proj}"
         dkr_reg_usr = "yannagler"
 
         dkr_img_reg_base = "${dkr_reg_usr}/${dkr_img_base}"
         dkr_img_reg = "${dkr_img_reg_base}:${BUILD_NUMBER}"
         dkr_img_reg_hndl = ""
 
-        hlm_chart = "$proj"
+        hlm_chart = "helm-chart"
+        hlm_rls = "${proj}-${hlm_chart}"
     }
 
     stages {
@@ -171,10 +172,10 @@ pipeline {
         always {
             echo "post - always"
             bat """
-                helm delete ${hlm_chart}
+                rem helm delete ${proj}
                 helm list --all
             """
-       }
+        }
         success {
             echo "post - success"
 /*
