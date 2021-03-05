@@ -21,6 +21,7 @@ pipeline {
 
         hlm_chart = "helm-chart"
         hlm_rls = "${proj}-${hlm_chart}"
+        hlm_svc_url = "k8s_url.txt"
     }
 
     stages {
@@ -168,6 +169,16 @@ pipeline {
                     sleep 5
 
                     helm list --all
+                """
+            }
+        }
+
+        stage("Stage-12: Obtain service URL") {
+            steps {
+                echo "Obtaining service URL..."
+                bat """
+                    minikube service ${hlm_rls} --url > ${hlm_svc_url}
+                    type ${hlm_svc_url}
                 """
             }
         }
