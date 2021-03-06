@@ -177,7 +177,8 @@ pipeline {
             steps {
                 echo "Obtaining service URL..."
                 bat """
-                    minikube service ${hlm_rls} --url > ${hlm_svc_url}
+                    rem minikube service ${hlm_rls} --url > ${hlm_svc_url}
+                    start /min /b "" cmd /c minikube service ${hlm_rls} --url ^> ${hlm_svc_url}
                     type ${hlm_svc_url}
                 """
             }
