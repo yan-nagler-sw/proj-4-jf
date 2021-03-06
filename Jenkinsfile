@@ -150,9 +150,9 @@ pipeline {
             }
         }
 
-        stage("Stage-11: Clean Docker environment") {
+        stage("Stage-11: Clean environment - Docker") {
             steps {
-                echo "Cleaning Docker environment..."
+                echo "Cleaning environment - Docker..."
                 bat """
                     docker-compose down
                     docker ps -a
@@ -196,9 +196,9 @@ pipeline {
             }
         }
 
-        stage("Stage-15: Clean Helm environment") {
+        stage("Stage-15: Clean environment - Helm") {
             steps {
-                echo "Cleaning Helm environment..."
+                echo "Cleaning environment - Helm..."
                 bat """
                     rem helm delete ${proj}
                     helm list --all
