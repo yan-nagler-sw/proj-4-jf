@@ -179,8 +179,8 @@ pipeline {
                 echo "Obtaining service URL..."
                 bat """
                     start /min /b minikube service ${hlm_rls} --url > ${k8s_svc_url_tmp}
-                    sleep 5
-                    (type ${k8s_svc_url_tmp} |  findstr "^http") > ${k8s_svc_url}
+                    sleep 10
+                    (type ${k8s_svc_url_tmp} | findstr "^http") > ${k8s_svc_url}
                     type ${k8s_svc_url}
                 """
             }
