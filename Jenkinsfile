@@ -21,8 +21,8 @@ pipeline {
 
         hlm_chart = "helm-chart"
         hlm_rls = "${proj}-${hlm_chart}"
-        k8s_svc_url = "k8s_url.txt"
-        k8s_svc_url_tmp = "k8s_url-tmp.txt"
+        txt_k8s_svc_url = "k8s_url.txt"
+        txt_k8s_svc_url_tmp = "k8s_url-tmp.txt"
     }
 
     stages {
@@ -178,10 +178,12 @@ pipeline {
             steps {
                 echo "Obtaining service URL..."
                 bat """
-                    start /min /b minikube service ${hlm_rls} --url > ${k8s_svc_url_tmp}
+                    start /min /b minikube service ${hlm_rls} --url > ${txt_k8s_svc_url_tmp}
                     sleep 10
-                    (type ${k8s_svc_url_tmp} | findstr "^http") > ${k8s_svc_url}
-                    type ${k8s_svc_url}
+                    (type ${txt_k8s_svc_url_tmp} | findstr "^http") > ${txt_k8s_svc_url}
+                    type ${txt_k8s_svc_url}
+
+                    ${py} k8s_backend_testing.py
                 """
             }
         }
@@ -191,8 +193,11 @@ pipeline {
         always {
             echo "post - always"
             bat """
-                rem helm delete ${proj}
+                helm delete ${proj}
                 helm list --all
+
+                del ${txt_k8s_svc_url_tmp}
+                del ${txt_k8s_svc_url}
             """
         }
         success {
