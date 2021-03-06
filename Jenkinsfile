@@ -178,6 +178,12 @@ pipeline {
         stage("Stage-13: Obtain K8S service URL") {
             steps {
                 echo "Obtaining K8S service URL..."
+            }
+        }
+
+        stage("Stage-14: Launch BE test - Helm") {
+            steps {
+                echo "Launching BE test - Helm: k8s_backend_testing.py..."
                 bat """
                     start /min /b minikube service ${hlm_rls} --url > ${txt_k8s_svc_url_tmp}
                     sleep 10
@@ -190,7 +196,7 @@ pipeline {
             }
         }
 
-        stage("Stage-14: Clean Helm environment") {
+        stage("Stage-15: Clean Helm environment") {
             steps {
                 echo "Cleaning Helm environment..."
                 bat """
