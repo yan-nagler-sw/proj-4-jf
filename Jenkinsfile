@@ -117,9 +117,9 @@ pipeline {
             }
         }
 
-        stage("Stage-8: Set compose image version") {
+        stage("Stage-8: Set Docker image version") {
             steps {
-                echo "Setting compose image version: ${BUILD_NUMBER}..."
+                echo "Setting Docker image version: ${BUILD_NUMBER}..."
                 bat """
                     echo IMAGE_TAG=${BUILD_NUMBER} > .env
                     type .env
@@ -174,9 +174,9 @@ pipeline {
             }
         }
 
-        stage("Stage-12: Obtain service URL") {
+        stage("Stage-13: Obtain K8S service URL") {
             steps {
-                echo "Obtaining service URL..."
+                echo "Obtaining K8S service URL..."
                 bat """
                     start /min /b minikube service ${hlm_rls} --url > ${txt_k8s_svc_url_tmp}
                     sleep 10
@@ -188,18 +188,24 @@ pipeline {
                 """
             }
         }
+
+        stage("Stage-14: Clean Helm environment") {
+            steps {
+                echo "Cleaning Helm environment..."
+                bat """
+                    rem helm delete ${proj}
+                    helm list --all
+
+                    del ${txt_k8s_svc_url_tmp}
+                    del ${txt_k8s_svc_url}
+                """
+            }
+        }
     }
 
     post {
         always {
             echo "post - always"
-            bat """
-                rem helm delete ${proj}
-                helm list --all
-
-                del ${txt_k8s_svc_url_tmp}
-                del ${txt_k8s_svc_url}
-            """
         }
         success {
             echo "post - success"
