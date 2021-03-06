@@ -194,7 +194,7 @@ pipeline {
         always {
             echo "post - always"
             bat """
-                helm delete ${proj}
+                rem helm delete ${proj}
                 helm list --all
 
                 del ${txt_k8s_svc_url_tmp}
