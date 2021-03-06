@@ -21,7 +21,8 @@ pipeline {
 
         hlm_chart = "helm-chart"
         hlm_rls = "${proj}-${hlm_chart}"
-        hlm_svc_url = "k8s_url.txt"
+        k8s_svc_url = "k8s_url.txt"
+        k8s_svc_url_tmp = "k8s_url-tmp.txt"
     }
 
     stages {
@@ -177,9 +178,10 @@ pipeline {
             steps {
                 echo "Obtaining service URL..."
                 bat """
-                    rem minikube service ${hlm_rls} --url > ${hlm_svc_url}
-                    start /min /b "" cmd /c minikube service ${hlm_rls} --url ^> ${hlm_svc_url}
-                    type ${hlm_svc_url}
+                    start /min /b minikube service ${hlm_rls} --url > ${k8s_svc_url_tmp}
+                    sleep 5
+                    (type ${k8s_svc_url_tmp} |  findstr "^http") > ${k8s_svc_url}
+                    type ${k8s_svc_url}
                 """
             }
         }
