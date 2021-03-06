@@ -34,7 +34,8 @@ pipeline {
                                         artifactDaysToKeepStr: '',
                                         artifactNumToKeepStr: '',
                                         daysToKeepStr: '5',
-                                        numToKeepStr: '20')),
+//                                        numToKeepStr: '20')),
+                                        numToKeepStr: '1')),
 
                         pipelineTriggers([pollSCM('30 * * * *')])
                     ])
