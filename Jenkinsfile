@@ -183,6 +183,7 @@ pipeline {
                     (type ${txt_k8s_svc_url_tmp} | findstr "^http") > ${txt_k8s_svc_url}
                     type ${txt_k8s_svc_url}
 
+                    set PYTHONPATH=%PYTHONPATH%;${pkgs_dir}
                     ${py} k8s_backend_testing.py
                 """
             }
