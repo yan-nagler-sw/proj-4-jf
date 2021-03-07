@@ -34,8 +34,7 @@ pipeline {
                                         artifactDaysToKeepStr: '',
                                         artifactNumToKeepStr: '',
                                         daysToKeepStr: '5',
-//                                        numToKeepStr: '20')),
-                                        numToKeepStr: '1')),
+                                        numToKeepStr: '20')),
 
                         pipelineTriggers([pollSCM('30 * * * *')])
                     ])
@@ -200,7 +199,7 @@ pipeline {
             steps {
                 echo "Cleaning environment - Helm..."
                 bat """
-                    rem helm delete ${proj}
+                    helm delete ${proj}
                     helm list --all
 
                     del ${txt_k8s_svc_url_tmp}
